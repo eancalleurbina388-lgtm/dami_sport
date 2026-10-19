@@ -61,15 +61,20 @@
                         </span>
                     </div>
                     <div class="p-4">
-                        <span class="text-[10px] text-gray-500 uppercase font-bold">{{ p[3] }}</span>
-                        <h3 class="font-bold text-base text-white mt-0.5 leading-tight">{{ p[1] }}</h3>
+                        <!-- Género y Código/Modelo -->
+                        <div class="flex justify-between items-center text-[10px] text-gray-400 uppercase font-bold mb-1">
+                            <span>{{ p[3] }}</span>
+                            <span class="bg-gray-800 text-gray-300 px-2 py-0.5 rounded">Ref: {{ p[1] }}</span>
+                        </div>
+                        <!-- Nombre Principal / Marca -->
+                        <h3 class="font-extrabold text-lg text-white leading-tight mt-1">{{ p[1] }}</h3>
                         <p class="text-xs text-gray-400 mt-2">Tallas: <span class="text-gray-200 font-semibold">{{ p[5] }}</span></p>
                     </div>
                 </div>
                 <div class="p-4 pt-0">
                     <div class="flex items-center justify-between mt-2 pt-3 border-t border-gray-800/60">
                         <span class="text-lg font-black text-red-500">S/ {{ "%.2f"|format(p[4]) }}</span>
-                        <a href="https://wa.me/51977730711?text=Hola%20DAMI%20SPORT,%20deseo%20comprar%20el%20modelo%20{{ p[1] }}%20de%20S/%20{{ p[4] }}" target="_blank" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1">
+                        <a href="https://wa.me/51977730711?text=Hola%20DAMI%20SPORT,%20deseo%20comprar%20el%20modelo%20{{ p[1] }}%20({{ p[2] }})%20en%20S/%20{{ p[4] }}" target="_blank" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1">
                             <i class="fa-brands fa-whatsapp"></i> Pedir
                         </a>
                     </div>
