@@ -5,20 +5,19 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-# Configurar carpeta de subida de imágenes
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 DB_PATH = os.path.join(app.root_path, 'database.db')
 
-# Inicializar Base de Datos
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS productos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            marca TEXT NOT NULL,
             nombre TEXT NOT NULL,
             calidad TEXT NOT NULL,
             genero TEXT NOT NULL,
@@ -32,20 +31,19 @@ def init_db():
 
 init_db()
 
-# Ruta Principal (Catálogo)
 @app.route('/')
 def index():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('SELECT id, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
+    cursor.execute('SELECT id, marca, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
     productos = cursor.fetchall()
     conn.close()
     return render_template('index.html', productos=productos)
 
-# Ruta del Panel Admin
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
+        marca = request.form.get('marca', 'Punto Original')
         nombre = request.form.get('nombre', '')
         calidad = request.form.get('calidad', '')
         genero = request.form.get('genero', '')
@@ -62,9 +60,9 @@ def admin():
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT INTO productos (nombre, calidad, genero, precio, tallas, imagen)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (nombre, calidad, genero, precio, tallas, imagen_db))
+                INSERT INTO productos (marca, nombre, calidad, genero, precio, tallas, imagen)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (marca, nombre, calidad, genero, precio, tallas, imagen_db))
             conn.commit()
             conn.close()
             
@@ -72,12 +70,11 @@ def admin():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('SELECT id, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
+    cursor.execute('SELECT id, marca, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
     productos = cursor.fetchall()
     conn.close()
     return render_template('admin.html', productos=productos)
 
-# Ruta para eliminar producto
 @app.route('/eliminar/<int:id>', methods=['POST'])
 def eliminar(id):
     conn = sqlite3.connect(DB_PATH)
