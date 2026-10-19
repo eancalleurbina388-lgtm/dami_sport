@@ -3,99 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin | DAMI SPORT</title>
+    <title>DAMI SPORT | Tu Estilo, Tu Pasión</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-[#080808] text-white min-h-screen p-4 sm:p-8">
+<body class="bg-[#080808] text-white min-h-screen">
 
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center border-b border-red-900/50 pb-4 mb-8">
+    <!-- Navbar -->
+    <nav class="border-b border-red-950/40 bg-black/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-10 w-auto">
-                <h1 class="text-xl sm:text-2xl font-black uppercase text-red-600">Panel Admin</h1>
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Dami Sport" class="h-10 w-auto">
             </div>
-            <a href="/" class="bg-[#1a1a1a] hover:bg-red-600 border border-gray-800 text-xs font-bold px-4 py-2 rounded-xl transition">
-                <i class="fa-solid fa-store mr-1"></i> Ver Tienda
+            <a href="/admin" class="text-xs text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-lock"></i> Admin
             </a>
         </div>
+    </nav>
 
-        <!-- Formulario de Subida -->
-        <div class="bg-[#121212] border border-red-950/60 rounded-2xl p-6 shadow-2xl mb-10">
-            <h2 class="text-lg font-bold text-white mb-4 border-b border-gray-800 pb-2">
-                <i class="fa-solid fa-plus text-red-500 mr-2"></i>Agregar Nuevo Modelo
-            </h2>
+    <!-- Banner Principal -->
+    <header class="py-12 px-4 text-center border-b border-gray-900 bg-gradient-to-b from-red-950/20 to-transparent">
+        <span class="bg-red-950/80 text-red-400 text-xs font-bold px-3 py-1 rounded-full border border-red-800/50 uppercase tracking-widest">
+            100 % ORIGINALES & TOP QUALITY
+        </span>
+        <h1 class="text-4xl sm:text-6xl font-black uppercase mt-4 tracking-tight">DAMI SPORT</h1>
+        <p class="text-gray-400 text-xs sm:text-sm mt-2">
+            <i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Ubícanos :: Ica - Pisco - Santa Cruz - Pueblo Nuevo
+        </p>
+        <div class="mt-6 flex justify-center gap-3">
+            <a href="#catalogo" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs px-6 py-3 rounded-xl transition shadow-lg shadow-red-950 uppercase">
+                Ver Catálogo
+            </a>
+            <a href="https://wa.me/51977730711" target="_blank" class="bg-[#121212] hover:bg-gray-800 text-white font-bold text-xs px-6 py-3 rounded-xl border border-gray-800 transition">
+                <i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> Contáctanos
+            </a>
+        </div>
+    </header>
 
-            <form action="/admin" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs text-gray-400 font-bold mb-1">Nombre del Modelo:</label>
-                    <input type="text" name="nombre" placeholder="Ej: Nike Air Force 1" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
-                </div>
-
-                <div>
-                    <label class="block text-xs text-gray-400 font-bold mb-1">Calidad:</label>
-                    <select name="calidad" class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
-                        <option value="100% Original">100% Original</option>
-                        <option value="Importado Top Quality">Importado Top Quality</option>
-                        <option value="Nacional Premium">Nacional Premium</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs text-gray-400 font-bold mb-1">Para (Género):</label>
-                    <select name="genero" class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
-                        <option value="Hombre">Hombre</option>
-                        <option value="Mujer">Mujer</option>
-                        <option value="Unisex">Unisex</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs text-gray-400 font-bold mb-1">Precio (S/):</label>
-                    <input type="number" step="0.01" name="precio" placeholder="180.00" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
-                </div>
-
-                <div class="sm:col-span-2">
-                    <label class="block text-xs text-gray-400 font-bold mb-1">Tallas separadas por coma:</label>
-                    <input type="text" name="tallas" placeholder="Ej: 38,39,40,41,42" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
-                </div>
-
-                <div class="sm:col-span-2">
-                    <label class="block text-xs text-gray-400 font-bold mb-1">Foto del Calzado:</label>
-                    <input type="file" name="imagen" accept="image/*" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-gray-300 focus:outline-none focus:border-red-600">
-                </div>
-
-                <div class="sm:col-span-2 pt-2">
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-500 font-bold py-3.5 px-4 rounded-xl transition text-sm uppercase tracking-wider shadow-lg shadow-red-950">
-                        Guardar y Publicar
-                    </button>
-                </div>
-            </form>
+    <!-- Catálogo de Modelos -->
+    <main id="catalogo" class="max-w-6xl mx-auto p-4 sm:p-8">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 class="text-2xl font-black uppercase tracking-tight">Nuestros <span class="text-red-600">Modelos</span></h2>
+                <p class="text-xs text-gray-400">Encuentra el estilo perfecto para ti</p>
+            </div>
         </div>
 
-        <!-- Lista de Productos -->
-        <h2 class="text-lg font-bold text-white mb-4">Productos en Catálogo ({{ productos|length }})</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% if productos %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for p in productos %}
-            <div class="bg-[#121212] border border-gray-800 rounded-xl p-4 flex gap-4 items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img src="{{ url_for('static', filename=p[6]) }}" class="w-14 h-14 object-cover rounded-lg border border-gray-800">
-                    <div>
-                        <h3 class="font-bold text-sm text-white">{{ p[1] }}</h3>
-                        <p class="text-xs text-red-500 font-semibold">S/ {{ "%.2f"|format(p[4]) }}</p>
+            <div class="bg-[#121212] border border-gray-800/80 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-red-900/50 transition">
+                <div>
+                    <div class="relative h-56 bg-black flex items-center justify-center p-4">
+                        <img src="{{ url_for('static', filename=p[6]) }}" alt="{{ p[1] }}" class="max-h-full max-w-full object-contain">
+                        <span class="absolute top-3 left-3 bg-red-950/80 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded border border-red-800/50 uppercase">
+                            {{ p[2] }}
+                        </span>
+                    </div>
+                    <div class="p-4">
+                        <span class="text-[10px] text-gray-500 uppercase font-bold">{{ p[3] }}</span>
+                        <h3 class="font-bold text-base text-white mt-0.5 leading-tight">{{ p[1] }}</h3>
+                        <p class="text-xs text-gray-400 mt-2">Tallas: <span class="text-gray-200 font-semibold">{{ p[5] }}</span></p>
                     </div>
                 </div>
-                <form action="/eliminar/{{ p[0] }}" method="POST">
-                    <button type="submit" class="bg-red-950/60 hover:bg-red-600 text-red-400 hover:text-white p-2.5 rounded-lg transition text-xs border border-red-800/50">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </form>
+                <div class="p-4 pt-0">
+                    <div class="flex items-center justify-between mt-2 pt-3 border-t border-gray-800/60">
+                        <span class="text-lg font-black text-red-500">S/ {{ "%.2f"|format(p[4]) }}</span>
+                        <a href="https://wa.me/51977730711?text=Hola%20DAMI%20SPORT,%20deseo%20comprar%20el%20modelo%20{{ p[1] }}%20de%20S/%20{{ p[4] }}" target="_blank" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1">
+                            <i class="fa-brands fa-whatsapp"></i> Pedir
+                        </a>
+                    </div>
+                </div>
             </div>
-            {% else %}
-            <p class="text-xs text-gray-500 col-span-full">Aún no hay productos subidos en la base de datos.</p>
             {% endfor %}
         </div>
-    </div>
+        {% else %}
+        <div class="bg-[#121212] border border-gray-800 rounded-2xl p-12 text-center my-8">
+            <i class="fa-solid fa-box-open text-4xl text-gray-600 mb-3"></i>
+            <p class="text-gray-400 text-sm">Aún no hay productos subidos en el catálogo.</p>
+            <p class="text-xs text-gray-600 mt-1">Ingresa a <a href="/admin" class="text-red-500 hover:underline">/admin</a> para publicar el primero.</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Botón Flotante de WhatsApp -->
+    <a href="https://wa.me/51977730711" target="_blank" class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-400 text-white p-4 rounded-full shadow-2xl transition z-50 text-2xl flex items-center justify-center w-14 h-14">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
 </body>
 </html>
