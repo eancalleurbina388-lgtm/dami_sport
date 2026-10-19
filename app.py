@@ -6,13 +6,15 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # Configurar carpeta de subida de imágenes
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+DB_PATH = os.path.join(app.root_path, 'database.db')
+
 # Inicializar Base de Datos
 def init_db():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS productos (
@@ -30,18 +32,15 @@ def init_db():
 
 init_db()
 
-# Ruta Principal (Catálogo protegido contra errores)
+# Ruta Principal (Catálogo)
 @app.route('/')
 def index():
-    try:
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM productos ORDER BY id DESC')
-        productos = cursor.fetchall()
-        conn.close()
-        return render_template('index.html', productos=productos)
-    except Exception:
-        return render_template('index.html', productos=[])
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute('SELECT id, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
+    productos = cursor.fetchall()
+    conn.close()
+    return render_template('index.html', productos=productos)
 
 # Ruta del Panel Admin
 @app.route('/admin', methods=['GET', 'POST'])
@@ -60,7 +59,7 @@ def admin():
             file.save(filepath)
             imagen_db = f'uploads/{filename}'
             
-            conn = sqlite3.connect('database.db')
+            conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
             cursor.execute('''
                 INSERT INTO productos (nombre, calidad, genero, precio, tallas, imagen)
@@ -71,9 +70,9 @@ def admin():
             
         return redirect(url_for('admin'))
 
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM productos ORDER BY id DESC')
+    cursor.execute('SELECT id, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
     productos = cursor.fetchall()
     conn.close()
     return render_template('admin.html', productos=productos)
@@ -81,7 +80,7 @@ def admin():
 # Ruta para eliminar producto
 @app.route('/eliminar/<int:id>', methods=['POST'])
 def eliminar(id):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('DELETE FROM productos WHERE id = ?', (id,))
     conn.commit()
