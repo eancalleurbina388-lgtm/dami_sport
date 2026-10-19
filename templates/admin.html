@@ -15,9 +15,14 @@
                 <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-10 w-auto">
                 <h1 class="text-xl sm:text-2xl font-black uppercase text-red-600">Panel Admin</h1>
             </div>
-            <a href="/" class="bg-[#1a1a1a] hover:bg-red-600 border border-gray-800 text-xs font-bold px-4 py-2 rounded-xl transition">
-                <i class="fa-solid fa-store mr-1"></i> Ver Catálogo Público
-            </a>
+            <div class="flex gap-2">
+                <a href="/" class="bg-[#1a1a1a] hover:bg-gray-800 border border-gray-800 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1">
+                    <i class="fa-solid fa-store"></i> Tienda
+                </a>
+                <a href="/logout" class="bg-red-950/60 hover:bg-red-600 border border-red-800 text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1 text-red-300 hover:text-white">
+                    <i class="fa-solid fa-right-from-bracket"></i> Salir
+                </a>
+            </div>
         </div>
 
         <div class="bg-[#121212] border border-red-950/60 rounded-2xl p-6 shadow-2xl mb-10">
@@ -28,7 +33,7 @@
             <form action="/admin" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs text-gray-400 font-bold mb-1">Marca:</label>
-                    <input type="text" name="marca" placeholder="Ej: Punto Original, Nike, Adidas" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
+                    <input type="text" name="marca" placeholder="Ej: Punto Original, Nike" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
                 </div>
 
                 <div>

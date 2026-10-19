@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Admin | DAMI SPORT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-[#080808] text-white min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-[#121212] border border-red-950/80 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+        <div class="text-center mb-6">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-12 w-auto mx-auto mb-3">
+            <h1 class="text-xl font-black uppercase text-red-600 tracking-wider">Panel de Administración</h1>
+            <p class="text-xs text-gray-400 mt-1">Ingresa tu contraseña para gestionar el catálogo</p>
+        </div>
+
+        {% if error %}
+        <div class="bg-red-950/60 border border-red-800 text-red-300 text-xs p-3 rounded-xl mb-4 text-center font-bold">
+            <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/admin" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs text-gray-400 font-bold mb-1">Contraseña:</label>
+                <input type="password" name="password" placeholder="••••••••" required class="w-full bg-black border border-gray-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-red-600">
+            </div>
+
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-500 font-bold py-3.5 px-4 rounded-xl transition text-sm uppercase tracking-wider shadow-lg shadow-red-950">
+                Ingresar al Panel
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="/" class="text-xs text-gray-500 hover:text-gray-300 transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Volver a la Tienda
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

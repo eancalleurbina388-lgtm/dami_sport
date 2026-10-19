@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.secret_key = 'dami_sport_secreto_seguro_2026'
+
+# CONTRASEÑA DE ADMINISTRADOR (Puedes cambiarla aquí cuando quieras)
+ADMIN_PASSWORD = "admin123"
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -14,8 +18,6 @@ DB_PATH = os.path.join(app.root_path, 'database.db')
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
-    # Crear tabla base si no existe
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS productos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,13 +29,10 @@ def init_db():
             imagen TEXT NOT NULL
         )
     ''')
-    
-    # Migración automática: agregar columna 'marca' si la base de datos es antigua
     cursor.execute("PRAGMA table_info(productos)")
     columnas = [column[1] for column in cursor.fetchall()]
     if 'marca' not in columnas:
         cursor.execute("ALTER TABLE productos ADD COLUMN marca TEXT DEFAULT 'Punto Original'")
-        
     conn.commit()
     conn.close()
 
@@ -51,8 +50,22 @@ def index():
     except Exception:
         return render_template('index.html', productos=[])
 
+# Ruta del Panel Admin con Contraseña
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    # Si intenta iniciar sesión
+    if request.method == 'POST' and 'password' in request.form:
+        if request.form.get('password') == ADMIN_PASSWORD:
+            session['admin_logged'] = True
+            return redirect(url_for('admin'))
+        else:
+            return render_template('login.html', error="Contraseña incorrecta. Inténtalo de nuevo.")
+
+    # Si no ha iniciado sesión, mostrar pantalla de login
+    if not session.get('admin_logged'):
+        return render_template('login.html')
+
+    # Si es POST para agregar producto
     if request.method == 'POST':
         marca = request.form.get('marca', 'Punto Original').strip()
         nombre = request.form.get('nombre', '').strip()
@@ -90,8 +103,16 @@ def admin():
 
     return render_template('admin.html', productos=productos)
 
+# Ruta para cerrar sesión
+@app.route('/logout')
+def logout():
+    session.pop('admin_logged', None)
+    return redirect(url_for('index'))
+
 @app.route('/eliminar/<int:id>', methods=['POST'])
 def eliminar(id):
+    if not session.get('admin_logged'):
+        return redirect(url_for('admin'))
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
