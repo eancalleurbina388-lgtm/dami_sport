@@ -17,7 +17,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS productos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            marca TEXT NOT NULL,
+            marca TEXT DEFAULT 'Punto Original',
             nombre TEXT NOT NULL,
             calidad TEXT NOT NULL,
             genero TEXT NOT NULL,
@@ -33,12 +33,16 @@ init_db()
 
 @app.route('/')
 def index():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('SELECT id, marca, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
-    productos = cursor.fetchall()
-    conn.close()
-    return render_template('index.html', productos=productos)
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, marca, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
+        productos = cursor.fetchall()
+        conn.close()
+        return render_template('index.html', productos=productos)
+    except Exception:
+        # En caso de diferencia de estructura antigua
+        return render_template('index.html', productos=[])
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -68,11 +72,15 @@ def admin():
             
         return redirect(url_for('admin'))
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('SELECT id, marca, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
-    productos = cursor.fetchall()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, marca, nombre, calidad, genero, precio, tallas, imagen FROM productos ORDER BY id DESC')
+        productos = cursor.fetchall()
+        conn.close()
+    except Exception:
+        productos = []
+
     return render_template('admin.html', productos=productos)
 
 @app.route('/eliminar/<int:id>', methods=['POST'])
