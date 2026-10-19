@@ -30,28 +30,31 @@ def init_db():
 
 init_db()
 
-# Ruta Principal (Catálogo)
+# Ruta Principal (Catálogo protegido contra errores)
 @app.route('/')
 def index():
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM productos ORDER BY id DESC')
-    productos = cursor.fetchall()
-    conn.close()
-    return render_template('index.html', productos=productos)
+    try:
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM productos ORDER BY id DESC')
+        productos = cursor.fetchall()
+        conn.close()
+        return render_template('index.html', productos=productos)
+    except Exception:
+        return render_template('index.html', productos=[])
 
 # Ruta del Panel Admin
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        calidad = request.form['calidad']
-        genero = request.form['genero']
-        precio = float(request.form['precio'])
-        tallas = request.form['tallas']
+        nombre = request.form.get('nombre', '')
+        calidad = request.form.get('calidad', '')
+        genero = request.form.get('genero', '')
+        precio = float(request.form.get('precio', 0))
+        tallas = request.form.get('tallas', '')
         
-        file = request.files['imagen']
-        if file:
+        file = request.files.get('imagen')
+        if file and file.filename != '':
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
